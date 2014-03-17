@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
   grunt.registerTask('nightwatch', 'Run your Nightwatch.js tests', function(target) {
+    var doneCallback = this.async();
+
     var slice = Array.prototype.slice,
         path = require('path'),
         fs = require('fs'),
@@ -179,14 +181,13 @@ module.exports = function(grunt) {
               grunt.log.error('There was an error while running the test.');
             }
             selenium.stopServer();
+            doneCallback();
           });
         });
       } else {
-        runner.run(setup.src_folders, setup.test_settings[group], config);
+        runner.run(setup.src_folders, setup.test_settings[group], config, doneCallback);
       }
     }
-
-    this.async();
 
     // if enabled, there are two scenarios:
     // - jar_path exists, then use it
