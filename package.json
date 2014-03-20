@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "nightwatch": "git://github.com/disciplezero/nightwatch#c3175961b8570e53b826c22164bd8425021263a4"
+    "nightwatch": "git://github.com/disciplezero/nightwatch#9317bef32ab511c2efde6ca6789d7c9fc055b94e"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
