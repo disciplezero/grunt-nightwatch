@@ -4,10 +4,10 @@
   "description": "Run your Nightwatch.js tests with Grunt",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pateketrueke/grunt-nightwatch.git"
+    "url": "https://github.com/disciplezero/grunt-nightwatch.git"
   },
   "bugs": {
-    "url": "https://github.com/pateketrueke/grunt-nightwatch/issues"
+    "url": "https://github.com/disciplezero/grunt-nightwatch/issues"
   },
   "keywords": [
     "ci",
@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "nightwatch": "https://github.com/disciplezero/nightwatch/tarball/master"
+    "nightwatch": "git://github.com/disciplezero/nightwatch#0547410e37e1fe33b6e041fe1cf09e89da744caa"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
