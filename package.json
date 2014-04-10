@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "nightwatch": "https://github.com/disciplezero/nightwatch/tarball/v0.4.12-dz-alpha"
+    "nightwatch": "git+ssh://git@github.com:disciplezero/nightwatch.git#v0.3.7"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
