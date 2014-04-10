@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "nightwatch": "git+ssh://git@github.com:disciplezero/nightwatch.git#v0.3.7"
+    "nightwatch": "git+ssh://git@github.com:disciplezero/nightwatch.git#0.4.13"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
