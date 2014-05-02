@@ -188,7 +188,7 @@ module.exports = function(grunt) {
       }
 
       if (setup.selenium.start_process) {
-        var selenium = require(nw_dir + '/runner/selenium.js');
+        var selenium = require(nw_dir + '/lib/runner/selenium.js');
 
         selenium.startServer(setup, setup.test_settings[group], function(error, child, error_out, exitcode) {
           if (error) {
