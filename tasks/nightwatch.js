@@ -209,7 +209,7 @@ module.exports = function(grunt) {
       if (setup.selenium.start_process) {
         var selenium = require(nw_dir + '/lib/runner/selenium.js');
 
-        selenium.startServer(setup, setup.test_settings[group], function(error, child, error_out, exitcode) {
+        selenium.startServer(setup, function(error, child, error_out, exitcode) {
           if (error) {
             grunt.log.writeln('FAIL');
             grunt.log.error('There was an error while starting the Selenium server:');
