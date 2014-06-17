@@ -18,14 +18,7 @@ module.exports = function(grunt) {
     }
 
     function parseCliOptions() {
-      var opts = {};
-      _.each(grunt.cli.options, function(value, key) {
-        if (key !== 'tasks' && key !== 'npm') {
-          opts[key] = value;
-        }
-      });
-
-      return opts;
+      return _.omit(grunt.cli.options, ['tasks', 'npm']);
     }
 
     function mergeVars(target) {
@@ -40,7 +33,7 @@ module.exports = function(grunt) {
           if (!_.isArray(value) && _.isObject(value)) {
             target[key] = mergeVars(target[key], value);
           } else {
-            target[key] = replaceEnv(value || target[key]);
+            target[key] = replaceEnv('undefined' === typeof value ? target[key] : value);
           }
         });
       });
@@ -51,7 +44,8 @@ module.exports = function(grunt) {
     var options = this.options({
       jar_url: 'http://selenium-release.storage.googleapis.com/2.40/selenium-server-standalone-2.40.0.jar',
       jar_path: '/opt/selenium/server-standalone.2.40.0.jar',
-      standalone: false
+      standalone: false,
+      timeout: 100
     });
 
     var defaults = {
@@ -60,7 +54,7 @@ module.exports = function(grunt) {
         output_folder: 'reports',
       },
       selenium: { log_path: '' },
-      test_settings: { silent: true },
+      test_settings: { silent: true, output: true },
       desiredCapabilities: {},
       screenshots: {}
     };
@@ -95,13 +89,22 @@ module.exports = function(grunt) {
     }
 
     // extend active target with global defaults
-    mergeVars(settings.test_settings[group], _.pick(defaults, 'screenshots', 'desiredCapabilities'));
+    mergeVars(settings.test_settings[group],
+      _.pick(defaults, 'screenshots', 'desiredCapabilities'),
+      _.pick(settings, 'custom_commands_path', 'custom_assertions_path'));
 
     // load the target options with the global and target defaults
-    mergeVars(settings.test_settings[group], options.test_settings, _.omit(options[group] || {}, fake_opts));
+    mergeVars(settings.test_settings[group],
+      defaults.test_settings,
+      options.test_settings,
+      _.omit(options[group] || {}, fake_opts));
 
     // override the global task options if needed
     mergeVars(options, _.pick(options[group] || {}, fake_opts));
+
+    // override some global options if needed
+    mergeVars(settings,
+      _.pick(settings.test_settings[group], ['src_folders', 'output_folder']))
 
     grunt.verbose.ok('Task options');
     grunt.verbose.writeln(JSON.stringify(options));
@@ -144,6 +147,22 @@ module.exports = function(grunt) {
       });
 
       req.end();
+    }
+
+    function errorHandler(err) {
+      if (err) {
+        grunt.log.writeln('FAIL');
+
+        if (err.message) {
+          grunt.log.error(err.message);
+        } else {
+          grunt.log.error('There was an error while running the test.');
+        }
+      }
+
+      setTimeout(function() {
+        doneCallback(err);
+      }, options.timeout || 100);
     }
 
     // nightwatch-runner
@@ -198,21 +217,14 @@ module.exports = function(grunt) {
             process.exit(exitcode);
           }
 
-          runner.run(setup.src_folders, setup.test_settings[group], config, function(err, success) {
-            if (err) {
-              grunt.log.writeln('FAIL');
-              grunt.log.error('There was an error while running the test.');
-            }
+          runner.run(setup.src_folders, setup.test_settings[group], config, function(err) {
             selenium.stopServer();
-            doneCallback(success);
+            errorHandler(err);
           });
         });
       } else {
-        runner.run(setup.src_folders, setup.test_settings[group], config, function(err, success) {
-          if (err) {
-            grunt.log.error('There was an error while running the test.');
-          }
-          doneCallback(success);
+        runner.run(setup.src_folders, setup.test_settings[group], config, function(err) {
+          errorHandler(err);
         });
       }
     }
