@@ -1,5 +1,5 @@
 {
-  "version": "0.2.2",
+  "version": "0.3.0",
   "name": "grunt-nightwatch",
   "description": "Run your Nightwatch.js tests with Grunt",
   "repository": {
@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "nightwatch": "git://github.com/disciplezero/nightwatch.git#0.5.7"
+    "nightwatch": "git://github.com/disciplezero/nightwatch.git#0.5.35"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

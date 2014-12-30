@@ -1,14 +1,6 @@
 # Grunt meets Nightwatch.js
 
-Install the dependencies:
-
-```bash
-$ npm install grunt-nightwatch --save-dev
-```
-
-Configure your tasks:
-
-**Gruntfile.js**
+Automatize your tests:
 
 ```javascript
 module.exports = function(grunt) {
@@ -44,39 +36,53 @@ module.exports = {
 Execute:
 
 ```bash
-$ grunt nightwatch
+$ grunt nightwatch      # target: default
+$ grunt nightwatch:A    # target: A
+$ grunt nightwatch:A:B  # targets: A, B
 ```
 
 ## Options
 
 Currently, `grunt-nightwatch` supports:
 
-* **settings** (object)
+- **globals**, **selenium**, **src_folders**, **output_folder**, **globals_path**, **custom_commands_path**, **custom_assertions_path**, **test_settings**, **launch_url**, **selenium_host**, **selenium_port**, **silent**, **output**, **disable_colors**, **screenshots**, **username**, **access_key**, **desiredCapabilities**, **exclude**, **filter**, **use_xpath**
 
-  This mirrors the `settings.json` values required by Nightwatch.
+  All of these options are fully supported and will be merged from **task** to **target** settings (including the **default** target).
 
-* **test_settings**
-
-  This mirrors the `test_settings` values required by Nightwatch.
-
-  Also will be the defaults for custom targets, leaving the target options override them if needed.
-
-* **desiredCapabilities**, **screenshots** and **selenium** values works the same as **test_settings** respectively.
-
-  This means global **screenshots** will be the _defaults_ on the active target, while global **selenium** applies for **settings** only.
-
-* **standalone** (boolean)
+- **standalone** (boolean)
 
   If enabled, there are two scenarios:
 
-  * If **jar_path** option exists then use it
-  * If not, it will download from **jar_url** option
+  - If **jar_path** option exists then use it
+  - If not, it will download from **jar_url** option
 
-* **jar_path** (string) - see above
+- **jar_path** (string) - see above
 
-* **jar_url** (string)  - see above
+- **jar_url** (string)  - see above
 
-Note that the **nighwatch.json** file is fully supported, but your task options will override them if needed.
+Note that the **nighwatch.json** file settings is fully supported, but your task options will override them if needed.
+
+Since `0.2.3` the  **settings.json** file was deprecated.
+
+Since `0.3.0` the **settings** property was deprecated.
+
+### Example options
+
+```javascript
+{
+  standalone: true,
+  jar_path: '/opt/selenium/server.jar',
+  jar_url: 'http://domain.com/files/selenium-server-standalone-2.40.0.jar',
+  globals: { foo: 'bar' },
+  globals_path: 'custom_tests/globals',
+  custom_commands_path: 'custom_tests/helpers',
+  custom_assertions_path: 'custom_tests/asserts',
+  src_folders: ['custom_tests/nightwatch'],
+  output_folder: 'report',
+  test_settings: {},
+  selenium: {}
+}
+```
 
 ## Targets
 
@@ -84,15 +90,15 @@ All options are the same as the main settings.
 
 ```javascript
 nightwatch: {
-  options: {
-    demo: { /* settings */ }
-  }
+  demo: { /* see above */ }
 }
 ```
 
 Now you can execute `grunt nightwatch:demo` to run your tests.
 
 Note that your tests must be grouped together as follows: `tests/<group>/test.js`
+
+Since `0.3.0` you can run multiple targets at once but not in the same flavor as  [Nightwatch does](https://github.com/beatfactor/nightwatch/blob/master/bin/_clirunner.js).
 
 ## Build status
 
